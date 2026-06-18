@@ -24,7 +24,7 @@ export default function AuroraPortfolio() {
   const [activeSection, setActiveSection] = useState("Home");
   const [selectedProject, setSelectedProject] = useState(null);
   const [isClosing, setIsClosing] = useState(false);
-  const isMobile = window.innerWidth < 768;
+const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const projects = [
     {
       id: 1,
