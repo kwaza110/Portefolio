@@ -146,22 +146,20 @@ const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     ).matches;
 
     const ribbons = [
-  { color: "rgba(59, 130, 246, 0.6)", speed: 0.003, amp: 0.08, xBase: 0.75, yBase: 0.85, pointsCount: 16 },
-  { color: "rgba(14, 165, 233, 0.55)", speed: 0.004, amp: 0.12, xBase: 0.70, yBase: 0.65, pointsCount: 16 },
-  { color: "rgba(34, 211, 238, 0.5)", speed: 0.002, amp: 0.15, xBase: 0.60, yBase: 0.45, pointsCount: 20 },
-  { color: "rgba(30, 64, 175, 0.35)", speed: 0.005, amp: 0.20, xBase: 0.45, yBase: 0.55, pointsCount: 12 },
+  { color: "rgba(221, 56, 166, 0.32)", speed: 0.003, amp: 0.08, xBase: 0.75, yBase: 0.85, pointsCount: 16 },
+  { color: "rgba(162, 0, 212, 0.61)", speed: 0.004, amp: 0.12, xBase: 0.70, yBase: 0.65, pointsCount: 16 },
+  { color: "rgba(0, 54, 124, 0.5)", speed: 0.002, amp: 0.15, xBase: 0.60, yBase: 0.45, pointsCount: 20 },
+  { color: "rgba(0, 28, 119, 0.35)", speed: 0.005, amp: 0.20, xBase: 0.45, yBase: 0.55, pointsCount: 12 },
 ];
 
 const draw = () => {
   ctx.clearRect(0, 0, width, height);
 
-  // 🌑 BACKGROUND BASE (TOUJOURS)
+  // 🌑 BACKGROUND BASE
   ctx.fillStyle = "#0a0a12";
   ctx.fillRect(0, 0, width, height);
 
-  // 🌈 TON AURORA (Appliqué sur Desktop ET Mobile désormais)
-  ctx.filter = "blur(90px)";
-
+  // 🌈 ON DESSINE LES RIBBONS (SANS ctx.filter !)
   ribbons.forEach((r, i) => {
     const t = frame * r.speed;
     const points = [];
@@ -195,8 +193,6 @@ const draw = () => {
     ctx.fillStyle = r.color;
     ctx.fill();
   });
-
-  ctx.filter = "none";
 
   if (!prefersReducedMotion) frame++;
   raf = requestAnimationFrame(draw);

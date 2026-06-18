@@ -1,7 +1,29 @@
 /* =========================
    WRAPPER GLOBAL
 ========================= */
+.bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* C'est ici que la magie opère pour Apple */
+  filter: blur(50px);
+  -webkit-filter: blur(50px);
+  
+  /* On grossit un poil le canvas pour éviter que le flou ne laisse voir des bords blancs */
+  transform: scale(1.2);
+  transform-origin: center;
+}
 
+/* Optionnel : Assure-toi que ton wrapper global ne cache pas le fond */
+.page-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-color: #0a0a12; /* Assure un fond sombre par défaut */
+  overflow-x: hidden;
+}
 .page-wrapper {
   position: relative;
   min-height: 100vh;
