@@ -152,97 +152,51 @@ export default function AuroraPortfolio() {
   { color: "rgba(30, 64, 175, 0.35)", speed: 0.005, amp: 0.20, xBase: 0.45, yBase: 0.55, pointsCount: 12 },
 ];
 
-   const draw = () => {
+const draw = () => {
   ctx.clearRect(0, 0, width, height);
 
   // 🌑 BACKGROUND BASE (TOUJOURS)
   ctx.fillStyle = "#0a0a12";
   ctx.fillRect(0, 0, width, height);
 
-  if (isMobile) {
-    // 🔷 rectangles légers PAR-DESSUS
+  // 🌈 TON AURORA (Appliqué sur Desktop ET Mobile désormais)
+  ctx.filter = "blur(90px)";
 
-    const cols = 5;
-    const rows = 8;
+  ribbons.forEach((r, i) => {
+    const t = frame * r.speed;
+    const points = [];
 
-    const w = width / cols;
-    const h = height / rows;
+    for (let s = 0; s <= r.pointsCount; s++) {
+      const yRatio = s / r.pointsCount;
+      const y = height - (yRatio * height * 0.9);
 
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
+      const wobble =
+        Math.sin(yRatio * 2.0 + t + i) * (width * r.amp) +
+        Math.sin(yRatio * 0.8 - t * 1.2 + i * 2) * (width * r.amp * 0.3);
 
-        const t = frame * 0.02;
+      const x = (r.xBase + (1 - yRatio) * 0.2) * width + wobble;
 
-        const offset =
-          Math.sin(t + x * 0.8 + y * 0.5) * 6;
-
-        ctx.fillStyle = "rgba(99, 102, 241, 0.08)";
-
-        ctx.fillRect(
-          x * w + offset,
-          y * h,
-          w - 2,
-          h - 2
-        );
-      }
+      points.push([x, y]);
     }
 
-    // 🌫 overlay gradient pour garder ton style
-    const gradient = ctx.createRadialGradient(
-      width * 0.3,
-      height * 0.2,
-      0,
-      width * 0.5,
-      height * 0.5,
-      width
-    );
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
 
-    gradient.addColorStop(0, "rgba(236,72,153,0.15)");
-    gradient.addColorStop(1, "transparent");
+    for (let p = 1; p < points.length - 2; p++) {
+      const xc = (points[p][0] + points[p + 1][0]) / 2;
+      const yc = (points[p][1] + points[p + 1][1]) / 2;
+      ctx.quadraticCurveTo(points[p][0], points[p][1], xc, yc);
+    }
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+    ctx.lineTo(width * 1.3, points[points.length - 1][1]);
+    ctx.lineTo(width * 1.3, height * 1.3);
+    ctx.closePath();
 
-  } else {
-    // 🌈 TON AURORA ORIGINAL (desktop)
-    ctx.filter = "blur(90px)";
+    ctx.fillStyle = r.color;
+    ctx.fill();
+  });
 
-    ribbons.forEach((r, i) => {
-      const t = frame * r.speed;
-      const points = [];
-
-      for (let s = 0; s <= r.pointsCount; s++) {
-        const yRatio = s / r.pointsCount;
-        const y = height - (yRatio * height * 0.9);
-
-        const wobble =
-          Math.sin(yRatio * 2.0 + t + i) * (width * r.amp) +
-          Math.sin(yRatio * 0.8 - t * 1.2 + i * 2) * (width * r.amp * 0.3);
-
-        const x = (r.xBase + (1 - yRatio) * 0.2) * width + wobble;
-
-        points.push([x, y]);
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], points[0][1]);
-
-      for (let p = 1; p < points.length - 2; p++) {
-        const xc = (points[p][0] + points[p + 1][0]) / 2;
-        const yc = (points[p][1] + points[p + 1][1]) / 2;
-        ctx.quadraticCurveTo(points[p][0], points[p][1], xc, yc);
-      }
-
-      ctx.lineTo(width * 1.3, points[points.length - 1][1]);
-      ctx.lineTo(width * 1.3, height * 1.3);
-      ctx.closePath();
-
-      ctx.fillStyle = r.color;
-      ctx.fill();
-    });
-
-    ctx.filter = "none";
-  }
+  ctx.filter = "none";
 
   if (!prefersReducedMotion) frame++;
   raf = requestAnimationFrame(draw);
