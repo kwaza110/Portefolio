@@ -204,6 +204,35 @@ const draw = () => {
       cancelAnimationFrame(raf);
     };
   }, []);
+// Synchronise l'état actif avec les boutons Retour/Avancer du navigateur
+useEffect(() => {
+  const handleHashChange = () => {
+    const currentHash = window.location.hash; // ex: "#competence"
+    
+    // 🚪 ACTION : Fermer la modale dès que le path change
+    setSelectedProject(null);
+    setIsClosing(false);
+
+    // On retrouve l'item de config qui correspond au href actuel
+    const matchedNav = CONFIG.nav.find(item => item.href === currentHash);
+    
+    if (matchedNav) {
+      setActiveSection(matchedNav.label);
+    } else if (currentHash === "" || currentHash === "#home") {
+      setActiveSection("Home");
+    } else if (currentHash === "#Showmore") {
+      setActiveSection("About");
+    }
+  };
+
+  // On écoute le changement de hash (déclenché par le bouton retour ou le clic)
+  window.addEventListener("hashchange", handleHashChange);
+  
+  // On l'exécute une fois au chargement initial
+  handleHashChange();
+
+  return () => window.removeEventListener("hashchange", handleHashChange);
+}, []);
 
   return (
     <div className="page-wrapper">
@@ -218,7 +247,11 @@ const draw = () => {
         <header className="header">
           <nav className="nav">
             {CONFIG.nav.map((item) => (
-              <a key={item.label} href={item.href} className="nav-link"  onClick={() => setActiveSection(item.label)} >
+              <a 
+                key={item.label} 
+                href={item.href} 
+                className={`nav-link ${activeSection === item.label ? "active" : ""}`}
+              >
                 {item.label}
               </a>
             ))}
