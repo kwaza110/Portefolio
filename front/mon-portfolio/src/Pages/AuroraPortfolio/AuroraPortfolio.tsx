@@ -82,6 +82,14 @@ export default function AuroraPortfolio() {
   };
 
   useEffect(() => {
+  const check = () => setIsMobile(window.innerWidth < 768);
+  check();
+  window.addEventListener("resize", check);
+
+  return () => window.removeEventListener("resize", check);
+}, []);
+
+  useEffect(() => {
   if (selectedProject) {
     document.body.classList.add("modal-open");
   } else {
@@ -138,11 +146,11 @@ export default function AuroraPortfolio() {
     ).matches;
 
     const ribbons = [
-      { color: "rgb(236, 72, 154)", speed: 0.003, amp: 0.08, xBase: 0.75, yBase: 0.85, pointsCount: 16 },
-      { color: "rgb(153, 0, 255)", speed: 0.004, amp: 0.12, xBase: 0.70, yBase: 0.65, pointsCount: 16 },
-      { color: "rgba(51, 112, 245, 0.88)", speed: 0.002, amp: 0.15, xBase: 0.60, yBase: 0.45, pointsCount: 20 },
-      { color: "rgba(29, 64, 160, 0.56)", speed: 0.005, amp: 0.20, xBase: 0.45, yBase: 0.55, pointsCount: 12 },
-    ];
+  { color: "rgba(59, 130, 246, 0.6)", speed: 0.003, amp: 0.08, xBase: 0.75, yBase: 0.85, pointsCount: 16 },
+  { color: "rgba(14, 165, 233, 0.55)", speed: 0.004, amp: 0.12, xBase: 0.70, yBase: 0.65, pointsCount: 16 },
+  { color: "rgba(34, 211, 238, 0.5)", speed: 0.002, amp: 0.15, xBase: 0.60, yBase: 0.45, pointsCount: 20 },
+  { color: "rgba(30, 64, 175, 0.35)", speed: 0.005, amp: 0.20, xBase: 0.45, yBase: 0.55, pointsCount: 12 },
+];
 
    const draw = () => {
   ctx.clearRect(0, 0, width, height);
